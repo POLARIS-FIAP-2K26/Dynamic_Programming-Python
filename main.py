@@ -1,6 +1,6 @@
 import requests
 import os
-import logger  # Importa a funcionalidade do arquivo separado
+import logger  
 
 # --- Definição de Cores ---
 cor_reset = "\033[0m"
@@ -13,22 +13,31 @@ cor_ciano = "\033[36m"
 def limpar_tela():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# --- Pilha ---
-def criar_pilha(): return []
-def empilhar(pilha, elemento): pilha.append(elemento)
-def esta_vazia(pilha): return len(pilha) == 0
-def desempilhar(pilha): return pilha.pop()
+# --- Pilha (LIFO) ---
+def criar_pilha(): 
+    return []
+
+def empilhar(pilha, elemento): 
+    pilha.append(elemento)
+
+def esta_vazia(pilha): 
+    return len(pilha) == 0
+
+def desempilhar(pilha): 
+    return pilha.pop()
 
 # --- API ---
 def carregar_dados():
     print(f"{cor_amarelo}Baixando dados da SpaceX...{cor_reset}\n")
     resposta = requests.get("https://api.spacexdata.com/v4/launches")
+    
     if resposta.status_code == 200:
         return resposta.json()
+        
     print(f"{cor_vermelho}Erro ao baixar dados.{cor_reset}")
     return []
 
-# --- Busca Binária Recursiva ---
+# --- Busca Binária Recursiva (Exigência do Projeto) ---
 def busca_binaria(lista, alvo_id, inicio, fim):
     if inicio > fim: 
         return None
@@ -37,12 +46,13 @@ def busca_binaria(lista, alvo_id, inicio, fim):
     
     if lista[meio]["flight_number"] == alvo_id:
         return lista[meio]
+        
     if alvo_id < lista[meio]["flight_number"]:
         return busca_binaria(lista, alvo_id, inicio, meio - 1)
         
     return busca_binaria(lista, alvo_id, meio + 1, fim)
 
-# --- Função Nova: Formatação Simples dos Detalhes ---
+# --- Formatação dos Detalhes ---
 def formatar_detalhes(resultado):
     status = f"{cor_verde}Sucesso{cor_reset}" if resultado['sucesso'] else f"{cor_vermelho}Falha{cor_reset}"
     print(f"{cor_ciano}--- DETALHES DA MISSÃO ---{cor_reset}")
@@ -77,6 +87,8 @@ def main():
             brutos = carregar_dados()
             if brutos:
                 pilha = criar_pilha()
+                
+                # Empilha os primeiros 50 registros da API
                 for voo in brutos[:50]:
                     empilhar(pilha, {
                         "flight_number": voo.get("flight_number"),
@@ -85,9 +97,12 @@ def main():
                     })
                     
                 dados_processados.clear()
+                
+                # Desempilha pra a lista de processados
                 while not esta_vazia(pilha):
                     dados_processados.append(desempilhar(pilha))
                     
+                # Ordenação obrigatória pra funcionar direitinho a busca binária
                 dados_processados.sort(key=lambda x: x["flight_number"])
                 print(f"✓ Dados carregados e ordenados com sucesso!")
                 
@@ -102,6 +117,7 @@ def main():
             try:
                 alvo = int(input(f"{cor_amarelo}Digite o número do voo:{cor_reset} "))
                 print() 
+                
                 resultado = busca_binaria(dados_processados, alvo, 0, len(dados_processados) - 1)
                 
                 if resultado:
