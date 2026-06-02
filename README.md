@@ -1,4 +1,4 @@
-# 🚀 Projeto Polaris: Sistema de Rastreamento Espacial (SpaceX)
+# Projeto Polaris: Sistema de Rastreamento Espacial (SpaceX)
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)
 ![FIAP](https://img.shields.io/badge/FIAP-Global_Solution-ed145b?style=for-the-badge)
