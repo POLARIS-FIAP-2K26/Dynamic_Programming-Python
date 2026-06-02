@@ -1,5 +1,6 @@
 import requests
 import os
+import logger  # Importa a funcionalidade do arquivo separado
 
 # --- Definição de Cores ---
 cor_reset = "\033[0m"
@@ -40,6 +41,15 @@ def busca_binaria(lista, alvo_id, inicio, fim):
         return busca_binaria(lista, alvo_id, inicio, meio - 1)
         
     return busca_binaria(lista, alvo_id, meio + 1, fim)
+
+# --- Função Nova: Formatação Simples dos Detalhes ---
+def formatar_detalhes(resultado):
+    status = f"{cor_verde}Sucesso{cor_reset}" if resultado['sucesso'] else f"{cor_vermelho}Falha{cor_reset}"
+    print(f"{cor_ciano}--- DETALHES DA MISSÃO ---{cor_reset}")
+    print(f" Número do Voo : {resultado['flight_number']}")
+    print(f" Nome da Missão: {resultado['missao']}")
+    print(f" Status        : {status}")
+    print(f"{cor_ciano}--------------------------{cor_reset}")
 
 # --- Execução Principal ---
 def main():
@@ -95,15 +105,11 @@ def main():
                 resultado = busca_binaria(dados_processados, alvo, 0, len(dados_processados) - 1)
                 
                 if resultado:
-                    status = f"{cor_verde}Sucesso{cor_reset}" if resultado['sucesso'] else f"{cor_vermelho}Falha{cor_reset}"
-                    
-                    print(f"{cor_ciano}Detalhes da missão:{cor_reset}")
-                    print(f"{cor_ciano}-{cor_reset}" * 30)
-                    print(f" Número do Voo : {resultado['flight_number']}")
-                    print(f" Nome da Missão: {resultado['missao']}")
-                    print(f" Status        : {status}")
+                    formatar_detalhes(resultado)
+                    logger.registrar_log(f"Busca efetuada - Voo {alvo}: Encontrado (Missao: {resultado['missao']})")
                 else:
                     print(f"{cor_vermelho}❌ O voo número {alvo} não foi encontrado.{cor_reset}")
+                    logger.registrar_log(f"Busca efetuada - Voo {alvo}: Nao encontrado na base")
                     
             except ValueError:
                 print(f"{cor_vermelho}⚠️ Erro: Digite apenas números inteiros.{cor_reset}")
