@@ -1,7 +1,0 @@
-Busca efetuada - Voo 50: Encontrado (Missao: KoreaSat 5A)
-Busca efetuada - Voo 100: Nao encontrado na base
-Busca efetuada - Voo 30: Encontrado (Missao: Thaicom 8)
-Busca efetuada - Voo 60: Nao encontrado na base
-Busca efetuada - Voo 51: Nao encontrado na base
-Busca efetuada - Voo 50: Encontrado (Missao: KoreaSat 5A)
-Busca efetuada - Voo 1: Encontrado (Missao: FalconSat)
